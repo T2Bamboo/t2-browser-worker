@@ -9,12 +9,18 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "prepare" : "yarn  build"
+    "prepare": "yarn  build"
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^22.12.0",
+    "extract-zip": "^2.0.1",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
-  }
+  },
+  "bin": {
+    "browser-worker": "./bin/cli.js"
+  },
+  "dependencies": {}
 }
