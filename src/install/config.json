@@ -1,0 +1,12 @@
+{
+   "path":"https://github.com/daijro/camoufox/releases/tag/v134.0.2-beta.20",
+   "assets":{
+      "lin.arm64":"camoufox-134.0.2-beta.20-lin.arm64.zip",
+      "lin.i686":"camoufox-134.0.2-beta.20-lin.i686.zip",
+      "lin.x86_64":"camoufox-134.0.2-beta.20-lin.x86_64.zip",
+      "mac.arm64":"camoufox-134.0.2-beta.20-mac.arm64.zip",
+      "mac.x86_64":"camoufox-134.0.2-beta.20-mac.x86_64.zip",
+      "win.i686":"camoufox-134.0.2-beta.20-win.i686.zip",
+      "win.x86_64":"camoufox-134.0.2-beta.20-win.x86_64.zip"
+   }
+}
