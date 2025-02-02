@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
+    "dev:br-ins": "ts-node tests/install.test.ts",
     "prepare": "yarn  build"
   },
   "license": "MIT",
@@ -21,5 +22,8 @@
   },
   "bin": {
     "browser-worker": "./lib/bin/cli.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
   }
 }

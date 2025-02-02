@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { installBrowser } from '../src/install.js';
+import { installBrowser } from "../src/install";
 
 const command = process.argv[2];
 

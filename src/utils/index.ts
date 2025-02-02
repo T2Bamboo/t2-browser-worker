@@ -14,11 +14,8 @@ export function rootDirectory() {
   return currentDir;
 }
 
-
 export function getPlatform(){
   const platform=os.platform()
-
-
 }
 
 
