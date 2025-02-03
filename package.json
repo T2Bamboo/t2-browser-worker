@@ -7,10 +7,10 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc && chmod +x lib/bin/cli.js",
+    "dev": "nodemon --exec ts-node tests/index.ts",
     "dev:br-ins": "ts-node tests/install.test.ts",
-    "prepare": "yarn  build"
+    "prepare": "yarn build"
   },
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +24,7 @@
     "browser-worker": "./lib/bin/cli.js"
   },
   "dependencies": {
-    "axios": "^1.7.9"
+    "axios": "^1.7.9",
+    "playwright": "^1.50.1"
   }
 }

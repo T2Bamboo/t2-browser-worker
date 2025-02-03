@@ -5,7 +5,7 @@ import { installBrowser } from "../src/install";
 const command = process.argv[2];
 
 if (command === 'install') {
-    installBrowser().catch(err => console.error('❌ Lỗi:', err));
+    installBrowser().catch(err => console.error('❌ error:', err));
 } else {
     console.log('❌ Invalid command. Use: yarn browser-worker install');
 }
