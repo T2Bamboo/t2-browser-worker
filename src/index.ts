@@ -1,9 +1,12 @@
-import { Page, Browser, firefox } from "playwright";
+import { Page, Browser, firefox, Cookie } from "playwright";
 import { BROWSER_PATH } from "./constants";
 import { platform } from "os";
 import { v4 as uuidv4 } from "uuid";
 
-export interface TaskConfig {}
+export interface TaskConfig {
+  headless?: boolean;
+  cookies?: Cookie[];
+}
 
 export type TaskHandle = (page: Page) => Promise<void>;
 
@@ -14,39 +17,46 @@ export class BrowserWorker {
   constructor() {
     this.executablePath = this.getExecutablePath();
   }
+
   private getExecutablePath(): string {
-    const system = platform();
-    if (system === "linux") return BROWSER_PATH.LINUX;
-    if (system === "darwin") return BROWSER_PATH.MAC;
-    if (system === "win32") return BROWSER_PATH.WIN;
-    return "";
+    switch (platform()) {
+      case "linux":
+        return BROWSER_PATH.LINUX;
+      case "darwin":
+        return BROWSER_PATH.MAC;
+      case "win32":
+        return BROWSER_PATH.WIN;
+      default:
+        return "";
+    }
   }
 
-  async runTask(handle: TaskHandle, config?: TaskConfig) {
+  async runTask(handle: TaskHandle, config?: TaskConfig): Promise<void | unknown> {
     console.time("Execution Time");
-    const browser = await firefox.launch({
-      headless: false,
-      executablePath: this.executablePath,
-    });
-    const brId = uuidv4();
-    this.browserList[brId] = browser;
-    const page = await browser.newPage();
+    const browserId = uuidv4();
 
-    // await page.route("**/*", (route) => {
-    //   const request = route.request();
-    //   if (["image", "stylesheet"].includes(request.resourceType())) {
-    //     route.abort();
-    //   } else {
-    //     route.continue();
-    //   }
-    // });
-    const result = await handle(page);
-    await page.close();
-    await browser.close();
-    delete this.browserList[brId];
-    console.timeEnd("Execution Time");
-    return result;
+    try {
+      const browser = await firefox.launch({
+        headless: config?.headless??true,
+        executablePath: this.executablePath,
+      });
+      this.browserList[browserId] = browser;
+
+      const context = await browser.newContext();
+      if (config?.cookies) {
+        await context.addCookies(config.cookies);
+      }
+      const page = await context.newPage();
+      const result = await handle(page);
+
+      await Promise.all([page.close(), browser.close()]);
+
+      delete this.browserList[browserId];
+
+      console.timeEnd("Execution Time");
+      return result;
+    } catch (error) {
+      console.error("Error in runTask:", error);
+    }
   }
-
-  async runWorkFollow() {}
 }
