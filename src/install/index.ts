@@ -1,52 +1,56 @@
 import { getBrowserLink } from "./helper";
-import { ROOT_PATH } from "../constants";
 import fs from "fs";
-import axios from 'axios';
+import axios from "axios";
 import extract from "extract-zip";
+import { rootDirectory } from "../utils";
 
-const ZIP_PATH=`${ROOT_PATH}/browser/camoufox.zip`
-const BROWSER_PATH=`${ROOT_PATH}/browser/camoufox`
-
-async function downloadFile(url:string, dest:string) {
+async function downloadFile(url: string, dest: string) {
   const { data, headers } = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream',
+    url,
+    method: "GET",
+    responseType: "stream",
   });
 
-  const totalLength = headers['content-length'];
+  const totalLength = headers["content-length"];
   if (!totalLength) {
-      console.warn('⚠️ Unable to determine file size.');
+    console.warn("⚠️ Unable to determine file size.");
   }
 
   let downloaded = 0;
   const totalMB = (totalLength / 1024 / 1024).toFixed(2); // Convert bytes -> MB
 
   console.log(`📥 Starting download: ${url}`);
-  console.log(`📦 File size: ${totalMB || '?'} MB`);
+  console.log(`📦 File size: ${totalMB || "?"} MB`);
 
   const writer = fs.createWriteStream(dest);
 
-  data.on('data', (chunk:any) => {
-      downloaded += chunk.length;
-      const downloadedMB = (downloaded / 1024 / 1024).toFixed(2);
-      const percent = totalLength ? ((downloaded / totalLength) * 100).toFixed(2) : '?';
-      process.stdout.write(`\r🚀 Downloading: ${downloadedMB} / ${totalMB || '?'} MB (${percent}%)`);
+  data.on("data", (chunk: any) => {
+    downloaded += chunk.length;
+    const downloadedMB = (downloaded / 1024 / 1024).toFixed(2);
+    const percent = totalLength
+      ? ((downloaded / totalLength) * 100).toFixed(2)
+      : "?";
+    process.stdout.write(
+      `\r🚀 Downloading: ${downloadedMB} / ${totalMB || "?"} MB (${percent}%)`
+    );
   });
 
   data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-      writer.on('finish', () => {
-          console.log('\n✅ Download completed!');
-          resolve(dest);
-      });
-      writer.on('error', reject);
+    writer.on("finish", () => {
+      console.log("\n✅ Download completed!");
+      resolve(dest);
+    });
+    writer.on("error", reject);
   });
 }
 
-
 export async function installBrowser() {
+  const ROOT_PATH = rootDirectory();
+  const ZIP_PATH = `${ROOT_PATH}/browser/camoufox.zip`;
+  const BROWSER_PATH = `${ROOT_PATH}/browser/camoufox`;
+
   const link = getBrowserLink();
 
   if (fs.existsSync(BROWSER_PATH)) {
@@ -61,5 +65,3 @@ export async function installBrowser() {
 
   console.log("✅ Installation complete!");
 }
-
-

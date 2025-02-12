@@ -1,7 +1,7 @@
 import { Page, Browser, firefox, Cookie, LaunchOptions } from "playwright";
-import { BROWSER_PATH } from "./constants";
 import { platform } from "os";
 import { v4 as uuidv4 } from "uuid";
+import { rootDirectory } from "./utils";
 
 export interface TaskConfig {
   headless?: boolean;
@@ -34,13 +34,15 @@ export class BrowserWorker {
   }
 
   private getExecutablePath(): string {
+    const ROOT_PATH = rootDirectory();
+
     switch (platform()) {
       case "linux":
-        return BROWSER_PATH.LINUX;
+        return `${ROOT_PATH}/browser/camoufox/camoufox`;
       case "darwin":
-        return BROWSER_PATH.MAC;
+        return `${ROOT_PATH}/browser/camoufox/Camoufox.app/Contents/MacOS/camoufox`;
       case "win32":
-        return BROWSER_PATH.WIN;
+        return `${ROOT_PATH}\\browser\\camoufox\\Camoufox.exe`;
       default:
         return "";
     }
