@@ -1,10 +1,10 @@
 import os from 'os'
-import config from "./manifest.json"
+import release from "./camoufoxRelease"
 
 
 export function getBrowserLink() {
-  const basePath = config.path;
-  const assets:any =config.assets
+  const basePath = release.path;
+  const assets:any =release.assets
   const system = os.platform();
   const arch = os.arch();
 
