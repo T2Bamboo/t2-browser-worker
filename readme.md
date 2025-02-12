@@ -16,7 +16,7 @@ or using Yarn:
 yarn add t2-browser-worker
 ```
 
-### Usage with puppeteer-extra
+### Usage 
 
 ```js
 import { BrowserWorker, BrPage } from "t2-browser-worker";
