@@ -53,6 +53,9 @@ export async function installBrowser() {
 
   const link = getBrowserLink();
 
+  if (!fs.existsSync(`${ROOT_PATH}/browser`)) {
+    fs.mkdirSync(`${ROOT_PATH}/browser`, { recursive: true });
+  }
   if (fs.existsSync(BROWSER_PATH)) {
     console.log("⚡ The browser is already installed.");
     return;

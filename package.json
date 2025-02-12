@@ -1,6 +1,6 @@
 {
   "name": "t2-browser-worker",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "files": [
