@@ -1,4 +1,4 @@
-# lib-name
+# t2-browser-worker
 
 [![npm version](https://badge.fury.io/js/t2-browser-worker.svg)](https://badge.fury.io/js/t2-browser-worker)
 
