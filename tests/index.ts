@@ -1,8 +1,8 @@
-import { BrowserWorker, BrPage } from "../src";
+import { BrowserWorker, Page } from "../src";
 const br = new BrowserWorker();
 
 br.runTask(
-  async (page: BrPage) => {
+  async (page: Page) => {
     await page.goto("https://example.com");
     await page.waitForTimeout(90000);
   },

@@ -3,16 +3,14 @@ import { platform } from "os";
 import { v4 as uuidv4 } from "uuid";
 import { rootDirectory } from "./utils";
 
+export { Page, Browser, firefox, Cookie } from "playwright";
 export interface TaskConfig {
   headless?: boolean;
   cookies?: Cookie[];
   blockResource?: BlockResource[];
   proxy?: ProxySettings;
 }
-
 export type TaskHandle = (page: Page) => Promise<void>;
-export type BrCookie = Cookie;
-export type BrPage = Page;
 export type BlockResource =
   | "image"
   | "stylesheet"
