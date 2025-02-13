@@ -1,14 +1,28 @@
-import { Page, Browser, firefox, Cookie, LaunchOptions } from "playwright";
+import {
+  Page,
+  Browser,
+  firefox,
+  Cookie,
+  LaunchOptions,
+  BrowserContextOptions,
+} from "playwright";
 import { platform } from "os";
 import { v4 as uuidv4 } from "uuid";
-import { rootDirectory } from "./utils";
+import { rootDirectory, getScreenSize } from "./utils";
 
-export { Page, Browser, firefox, Cookie } from "playwright";
+export {
+  Page,
+  Browser,
+  firefox,
+  Cookie,
+  BrowserContextOptions,
+} from "playwright";
 export interface TaskConfig {
   headless?: boolean;
   cookies?: Cookie[];
   blockResource?: BlockResource[];
   proxy?: ProxySettings;
+  contextOptions?: BrowserContextOptions;
 }
 export type TaskHandle = (page: Page) => Promise<void>;
 export type BlockResource =
@@ -75,8 +89,16 @@ export class BrowserWorker {
         proxy: config?.proxy,
       });
       this.browserList[browserId] = browser;
-
-      const context = await browser.newContext();
+      const [width, height] = getScreenSize();
+      const context = await browser.newContext({
+        viewport: { width, height },
+        ignoreHTTPSErrors: true,
+        extraHTTPHeaders: {
+          "Cross-Origin-Opener-Policy": "unsafe-none",
+          "Cross-Origin-Embedder-Policy": "unsafe-none",
+        },
+        ...(config?.contextOptions ?? {}),
+      });
 
       if (config?.cookies) await context.addCookies(config?.cookies);
       const page = await context.newPage();
