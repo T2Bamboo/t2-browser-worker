@@ -1,9 +1,11 @@
-import { BrowserWorker, Page } from "../src";
+import { BrowserWorker, Page, BrCookie } from "../src";
 const br = new BrowserWorker();
+import rawCookies from "./cookie.json";
+
 
 br.runTask(
   async (page: Page) => {
-    await page.goto("https://nopecha.com/demo/cloudflare");
+    await page.goto("https://truyenqqto.com");
     const title = await page.title();
     console.log("Page title:", title);
 
@@ -13,15 +15,13 @@ br.runTask(
       await page.mouse.click(210, 290);
     }
 
+
     await page.waitForTimeout(90000);
   },
   {
     headless: false,
-    contextOptions: {
-      viewport: {
-        width: 1280,
-        height: 720,
-      },
-    },
+    mode:'Persistent',
+    userDataDir:"/Users/2noscript/workspace/t2data/t2-browser-worker/profile"
+    // cookies: rawCookies as BrCookie[],
   }
 );

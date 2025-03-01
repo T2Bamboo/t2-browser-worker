@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "tsc && chmod +x lib/bin/cli.js",
-    "dev": "nodemon --exec ts-node tests/index.ts",
+    "dev": "ts-node tests/index.ts",
     "dev:br-ins": "ts-node tests/install.test.ts",
     "prepare": "yarn build"
   },

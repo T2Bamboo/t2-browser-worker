@@ -1,53 +1,24 @@
-import {
-  Page,
-  Browser,
-  firefox,
-  Cookie,
-  LaunchOptions,
-  BrowserContextOptions,
-} from "playwright";
+import { firefox, BrowserContext } from "playwright";
 import { platform } from "os";
 import { v4 as uuidv4 } from "uuid";
-import { rootDirectory, getScreenSize } from "./utils";
+import { rootDirectory, getScreenSize, formatCookie } from "./utils";
+import { TaskConfig, TaskHandle } from "./models/types";
 
-export {
-  Page,
-  Browser,
-  firefox,
-  Cookie,
-  BrowserContextOptions,
-} from "playwright";
-export interface TaskConfig {
-  headless?: boolean;
-  cookies?: Cookie[];
-  blockResource?: BlockResource[];
-  proxy?: ProxySettings;
-  contextOptions?: BrowserContextOptions;
-}
-export type TaskHandle = (page: Page) => Promise<void>;
-export type BlockResource =
-  | "image"
-  | "stylesheet"
-  | "font"
-  | "media"
-  | "script"
-  | "xhr"
-  | "fetch"
-  | "websocket";
-
-export type ProxySettings = NonNullable<LaunchOptions["proxy"]>;
 export class BrowserWorker {
-  private browserList: Record<string, Browser> = {};
+  private listTask: Record<string, BrowserContext> = {};
   private executablePath: string;
   private limitBrCount = 5;
+  private FLAG_TIME = "Execution Time";
+  private deviceW: number;
+  private deviceH: number;
 
   constructor() {
     this.executablePath = this.getExecutablePath();
+    [this.deviceW, this.deviceH] = getScreenSize();
   }
 
   private getExecutablePath(): string {
     const ROOT_PATH = rootDirectory();
-
     switch (platform()) {
       case "linux":
         return `${ROOT_PATH}/browser/camoufox/camoufox`;
@@ -61,17 +32,7 @@ export class BrowserWorker {
   }
 
   private checkLimitBrowser() {
-    return Object.keys(this.browserList).length > this.limitBrCount;
-  }
-
-  private async useBlockResource(page: Page, blockList: BlockResource[]) {
-    await page.route("**/*", (route) => {
-      if (blockList.includes(route.request().resourceType() as BlockResource)) {
-        route.abort();
-      } else {
-        route.continue();
-      }
-    });
+    return Object.keys(this.listTask).length > this.limitBrCount;
   }
 
   async runTask(
@@ -80,43 +41,70 @@ export class BrowserWorker {
   ): Promise<void | unknown> {
     if (this.checkLimitBrowser()) return;
 
-    console.time("Execution Time");
-    const browserId = uuidv4();
+    console.time(this.FLAG_TIME);
+    const taskId = uuidv4();
     try {
-      const browser = await firefox.launch({
+      let browser, context;
+
+      const configBrowser = {
         headless: config?.headless,
-        executablePath: this.executablePath,
+        executablePath: config?.executablePath ?? this.executablePath,
         proxy: config?.proxy,
-      });
-      this.browserList[browserId] = browser;
-      const [width, height] = getScreenSize();
-      const context = await browser.newContext({
-        viewport: { width, height },
+      };
+      const configContext = {
+        viewport: { width: this.deviceW, height: this.deviceH },
         ignoreHTTPSErrors: true,
         extraHTTPHeaders: {
           "Cross-Origin-Opener-Policy": "unsafe-none",
           "Cross-Origin-Embedder-Policy": "unsafe-none",
         },
         ...(config?.contextOptions ?? {}),
-      });
+      };
 
-      if (config?.cookies) await context.addCookies(config?.cookies);
+      if (config?.mode === "Persistent") {
+        context = await firefox.launchPersistentContext(
+          config?.userDataDir ?? "",
+          {
+            ...configBrowser,
+            ...configContext,
+          }
+        );
+        await Promise.all(context.pages().map((page) => page.close()));
+      } else {
+        browser = await firefox.launch(configBrowser);
+        context = await browser.newContext(configContext);
+        this.listTask[taskId] = context;
+      }
+
+      if (config?.cookies)
+        await context.addCookies(formatCookie(config.cookies));
+
       const page = await context.newPage();
-      if (config?.blockResource)
-        await this.useBlockResource(page, config.blockResource);
-
       const result = await handle(page);
 
-      await Promise.all([page.close(), browser.close()]);
-      delete this.browserList[browserId];
+      await Promise.all([page.close(), browser?.close(), context?.close()]);
 
-      console.timeEnd("Execution Time");
+      delete this.listTask[taskId];
+      console.timeEnd(this.FLAG_TIME);
+
       return result;
     } catch (error) {
       console.error("Error in runTask:", error);
     }
   }
+
   setLimitBrowserStart(limitCount: number) {
     this.limitBrCount = limitCount;
   }
 }
+
+export { Page, Browser, BrowserContextOptions } from "playwright";
+
+export {
+  BlockResource,
+  TaskConfig,
+  TaskHandle,
+  BrCookie,
+} from "./models/types";
+
+export { useBlockResource, useScroll, useSleep, usePageFetch } from "./utils";
