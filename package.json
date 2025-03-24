@@ -1,6 +1,6 @@
 {
   "name": "t2-browser-worker",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "files": [
@@ -15,20 +15,21 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.12.0",
-    "extract-zip": "^2.0.1",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "bin": {
-    "browser-worker": "./lib/bin/cli.js"
+    "t2-browser-worker": "./lib/bin/cli.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "extract-zip": "^2.0.1",
     "playwright": "^1.50.1",
     "uuid": "^11.0.5"
   },
   "keywords": [
-    "anti-detect-browser","browser-worker"
+    "anti-detect-browser",
+    "browser-worker"
   ]
 }

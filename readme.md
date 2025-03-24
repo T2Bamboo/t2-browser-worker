@@ -37,7 +37,7 @@ br.runTask(
 ```
 
 
-
+<!-- 
 ## 🔽 🔥 Important Updates
 
 <details>
@@ -69,7 +69,7 @@ br.runTask(
   }
 );
   ```
-</details>
+</details> -->
 
 
 ### Api Reference
