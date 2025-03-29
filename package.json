@@ -10,7 +10,8 @@
     "build": "tsc && chmod +x lib/bin/cli.js",
     "dev": "ts-node tests/index.ts",
     "dev:br-ins": "ts-node tests/install.test.ts",
-    "prepare": "yarn build"
+    "prepare": "yarn build",
+    "local-install":"ts-node tests/install.test.ts"
   },
   "license": "MIT",
   "devDependencies": {
