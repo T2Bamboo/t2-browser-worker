@@ -1,5 +1,5 @@
-const foxVersion = "135.0";
-const betaVer = "22";
+const foxVersion = "135.0.1";
+const betaVer = "24";
 
 const platforms = ["lin.arm64", "lin.i686", "lin.x86_64", "mac.arm64", "mac.x86_64", "win.i686", "win.x86_64"];
 
