@@ -119,11 +119,9 @@ export class BrowserWorker {
       throw error;
     } finally {
       try {
-        if (this.listTask[taskId]) {
-          const pages = this.listTask[taskId].pages();
-          await Promise.all(pages.map((page) => page.close()));
-          await browser?.close();
-          await context?.close();
+        if (this.listTask[taskId]) {    
+          await context?.close()
+          await browser?.close()
           delete this.listTask[taskId];
         }
       } catch (cleanupError) {
