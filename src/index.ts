@@ -51,7 +51,7 @@ export class BrowserWorker {
       executablePath: config?.executablePath ?? this.executablePath,
       proxy: config?.proxy,
     };
-    
+
     const configContext = {
       viewport: { width: this.deviceW, height: this.deviceH },
       ignoreHTTPSErrors: true,
@@ -61,7 +61,7 @@ export class BrowserWorker {
       },
       ...(config?.contextOptions ?? {}),
     };
-    
+
     try {
       if (config?.mode === "Persistent") {
         context = await firefox.launchPersistentContext(
@@ -90,24 +90,30 @@ export class BrowserWorker {
     config?: TaskConfig
   ): Promise<void | unknown> {
     if (this.checkLimitBrowser()) {
-      console.warn(`Browser limit reached (${this.limitBrCount}). Task skipped.`);
+      console.warn(
+        `Browser limit reached (${this.limitBrCount}). Task skipped.`
+      );
       return;
     }
 
     console.time(this.FLAG_TIME);
     const taskId = uuidv4();
     let browser, context;
-    
+
     try {
       const instance = await this.intInstance(config);
       browser = instance.browser;
       context = instance.context;
       this.listTask[taskId] = context;
-      
-      const page = await context.newPage();
-      const result = await handle(page);
 
-      return result;
+      const page = await context.newPage();
+      try {
+        const result = await handle(page);
+        return result;
+      } catch (error) {
+        console.error("Error in handle:", error);
+        throw error;
+      }
     } catch (error) {
       console.error("Error in runTask:", error);
       throw error;
@@ -115,7 +121,7 @@ export class BrowserWorker {
       try {
         if (this.listTask[taskId]) {
           const pages = this.listTask[taskId].pages();
-          await Promise.all(pages.map(page => page.close()));
+          await Promise.all(pages.map((page) => page.close()));
           await browser?.close();
           await context?.close();
           delete this.listTask[taskId];
@@ -143,7 +149,7 @@ export class BrowserWorker {
   setLimitBrowserStart(limitCount: number) {
     this.limitBrCount = limitCount;
   }
-  
+
   getActiveBrowserCount(): number {
     return Object.keys(this.listTask).length;
   }
