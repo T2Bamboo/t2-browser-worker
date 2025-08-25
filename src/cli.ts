@@ -1,59 +1,12 @@
 #!/usr/bin/env node
 
-import os from 'os'
 import fs from 'fs'
 import axios from 'axios'
 import extract from 'extract-zip'
-import { rootDirectory } from '../src/helper/utils'
-
-const foxVersion = '135.0.1'
-const betaVer = '24'
-
-const platforms = [
-	'lin.arm64',
-	'lin.i686',
-	'lin.x86_64',
-	'mac.arm64',
-	'mac.x86_64',
-	'win.i686',
-	'win.x86_64',
-]
-
-const assets = Object.fromEntries(
-	platforms.map(platform => [
-		platform,
-		`camoufox-${foxVersion}-beta.${betaVer}-${platform}.zip`,
-	])
-)
-
-const release = {
-	path: `https://github.com/daijro/camoufox/releases/download/v${foxVersion}-beta.${betaVer}`,
-	assets,
-}
+import { BROWSER_DIR } from './__path__'
+import { downloadLink } from './__camoufox__'
 
 
-
-function getBrowserLink() {
-	const basePath = release.path
-	const assets: any = release.assets
-	const system = os.platform()
-	const arch = os.arch()
-	let key
-	if (system === 'linux') {
-		key = arch.includes('arm')
-			? 'lin.arm64'
-			: arch.includes('64')
-			? 'lin.x86_64'
-			: 'lin.i686'
-	} else if (system === 'darwin') {
-		key = arch.includes('arm') ? 'mac.arm64' : 'mac.x86_64'
-	} else if (system === 'win32') {
-		key = arch.includes('64') ? 'win.x86_64' : 'win.i686'
-	} else {
-		throw new Error('Unsupported OS')
-	}
-	return `${basePath}/${assets[key]}`
-}
 
 async function downloadFile(url: string, dest: string) {
 	const { data, headers } = await axios({
@@ -97,21 +50,19 @@ async function downloadFile(url: string, dest: string) {
 }
 
 async function installBrowser() {
-	const ROOT_PATH = rootDirectory()
-	const ZIP_PATH = `${ROOT_PATH}/browser/camoufox.zip`
-	const BROWSER_PATH = `${ROOT_PATH}/browser/camoufox`
+	const ZIP_PATH = `${BROWSER_DIR}/camoufox.zip`
+	const BROWSER_PATH = `${BROWSER_DIR}/camoufox`
 
-	const link = getBrowserLink()
 
-	if (!fs.existsSync(`${ROOT_PATH}/browser`)) {
-		fs.mkdirSync(`${ROOT_PATH}/browser`, { recursive: true })
+	if (!fs.existsSync(`${BROWSER_DIR}/browser`)) {
+		fs.mkdirSync(`${BROWSER_DIR}/browser`, { recursive: true })
 	}
 	if (fs.existsSync(BROWSER_PATH)) {
 		console.log('⚡ The browser is already installed.')
 		return
 	}
 
-	await downloadFile(link, ZIP_PATH)
+	await downloadFile(downloadLink, ZIP_PATH)
 
 	console.log('📦 Extracting browser...')
 	await extract(ZIP_PATH, { dir: BROWSER_PATH })

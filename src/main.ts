@@ -1,25 +1,22 @@
 import { firefox, BrowserContext } from 'playwright-core'
-import { v4 as uuidv4 } from 'uuid'
 import { BrCookie, TaskConfig, Task } from './types/browserWorker'
-import { formatCookie, getExecBrowserPath, getScreenSize } from './helper/utils'
-
+import { formatCookie, getScreenSize, randomId } from './helper/utils'
+import { BROWSER_EXEC_PATH } from './__path__'
 
 export class BrowserWorker {
 	private listTask: Record<string, BrowserContext> = {}
-	private executablePath: string
 	private limitBrCount = 5
 	private FLAG_TIME = 'Execution Time'
 	private deviceW: number
 	private deviceH: number
 
 	constructor(options?: { limitBrowsers?: number }) {
-		this.executablePath = getExecBrowserPath()
 		;[this.deviceW, this.deviceH] = getScreenSize()
 		if (options?.limitBrowsers) {
 			this.limitBrCount = options.limitBrowsers
 		}
 	}
-    
+
 	private checkLimitBrowser() {
 		return Object.keys(this.listTask).length >= this.limitBrCount
 	}
@@ -34,7 +31,7 @@ export class BrowserWorker {
 
 		const configBrowser = {
 			headless: taskConfig?.headless ?? false,
-			executablePath: taskConfig?.executablePath ?? this.executablePath,
+			executablePath: taskConfig?.executablePath ?? BROWSER_EXEC_PATH,
 			proxy: taskConfig?.proxy,
 		}
 
@@ -62,9 +59,6 @@ export class BrowserWorker {
 				browser = await firefox.launch(configBrowser)
 				context = await browser.newContext(configContext)
 			}
-
-			await this.addCookies(context, taskConfig?.cookies)
-			
 			return { browser, context }
 		} catch (error) {
 			console.error('Error initializing browser instance:', error)
@@ -72,10 +66,7 @@ export class BrowserWorker {
 		}
 	}
 
-	async runTask(
-		task: Task,
-		config?: TaskConfig
-	): Promise<void | unknown> {
+	async runTask(task: Task, config?: TaskConfig): Promise<void | unknown> {
 		if (this.checkLimitBrowser()) {
 			console.warn(
 				`Browser limit reached (${this.limitBrCount}). Task skipped.`
@@ -84,7 +75,7 @@ export class BrowserWorker {
 		}
 
 		console.time(this.FLAG_TIME)
-		const taskId = uuidv4()
+		const taskId = randomId()
 		let browser, context
 
 		try {
@@ -118,8 +109,6 @@ export class BrowserWorker {
 		}
 	}
 
-
-
 	setLimitBrowserStart(limitCount: number) {
 		this.limitBrCount = limitCount
 	}
@@ -128,5 +117,3 @@ export class BrowserWorker {
 		return Object.keys(this.listTask).length
 	}
 }
-
-

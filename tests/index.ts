@@ -1,19 +1,13 @@
-import { BrowserWorker, Page, BrCookie, useSleep, useScroll } from '../src'
-const br = new BrowserWorker()
+import { BrowserWorker, Page } from '../src'
 
-br.runTask(
-	async (page: Page) => {
-		await page.goto('https://browserleaks.com/ip')
-	},
-	{
-		headless: false,
-		contextOptions: {
-			viewport: {
-				width: 1366,
-				height: 768,
-			},
-		},
+const worker = new BrowserWorker()
 
-		// cookies: rawCookies as BrCookie[],
-	}
-)
+const task = async (page: Page) => {
+	await page.goto('https://example.com')
+	return await page.title()
+}
+worker.runTask(task, { headless: false }).then(result => {
+	console.log(result)
+})
+
+// console.log(ROOT_PATH_M)

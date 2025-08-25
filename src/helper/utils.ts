@@ -4,7 +4,6 @@ import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 import os from 'os'
-import { ROOT_PATH } from './constants'
 
 export function formatCookie(cookieList: BrCookie[]): Cookie[] {
 	const pwCookie: Cookie[] = []
@@ -22,15 +21,7 @@ export function formatCookie(cookieList: BrCookie[]): Cookie[] {
 	return pwCookie
 }
 
-export function rootDirectory() {
-	let currentDir = process.cwd()
-	while (!fs.existsSync(path.join(currentDir, 'package.json'))) {
-		const parentDir = path.dirname(currentDir)
-		if (currentDir === parentDir) break
-		currentDir = parentDir
-	}
-	return currentDir
-}
+
 
 export function getScreenSize() {
 	const platform = os.platform()
@@ -80,15 +71,8 @@ export function getScreenSize() {
 	return [1280, 720]
 }
 
-export function getExecBrowserPath(): string {
-	switch (os.platform()) {
-		case 'linux':
-			return `${ROOT_PATH}/browser/camoufox/camoufox`
-		case 'darwin':
-			return `${ROOT_PATH}/browser/camoufox/Camoufox.app/Contents/MacOS/camoufox`
-		case 'win32':
-			return `${ROOT_PATH}\\browser\\camoufox\\Camoufox.exe`
-		default:
-			return ''
-	}
+
+
+export function randomId() {
+	return Date.now().toString(36) + Math.random().toString(36).substring(2, 10)
 }
