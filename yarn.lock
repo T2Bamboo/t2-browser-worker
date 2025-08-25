@@ -257,6 +257,60 @@ ignore-by-default@^1.0.1:
   resolved "https://registry.npmjs.org/ignore-by-default/-/ignore-by-default-1.0.1.tgz"
   integrity sha512-Ius2VYcGNk7T90CppJqcIkS5ooHUZyIQK+ClZfMfMNFEF9VSE73Fq+906u/CWu92x4gzZMWOwfFYckPObzdEbA==
 
+impit-darwin-arm64@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-darwin-arm64/-/impit-darwin-arm64-0.5.4.tgz#767fab2dce27e6eca84b1698f0d35f9fb1c9c8b8"
+  integrity sha512-Vkmi/GjlPC5yrSneif9+k5rIDFvWYT7HebwPM8B/b0XDY+bd2+rNwEGoEznS8vnciF2Nr9Pznvvgon5bPsRfrg==
+
+impit-darwin-x64@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-darwin-x64/-/impit-darwin-x64-0.5.4.tgz#7aa67413c525ee89755c214cbec72019d238086c"
+  integrity sha512-S3QqBIO9Vav4J2s7NJbX8TYJEoAHytPiJjMrTB3w3yl3DLHJ28EZnlBkcNpqcJVTPEqfe1Rq5HCSXRfio4Cpkw==
+
+impit-linux-arm64-gnu@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-linux-arm64-gnu/-/impit-linux-arm64-gnu-0.5.4.tgz#2cb74dcc21542fcda643cdd2b785eecc988d7780"
+  integrity sha512-k5lCA0LF7920QqajipzK/hg5SUkOEg0aXwnDu8w1dnH9rGWLfEw1Cth83W8jmAbdlqoWt1F76pue4xlBDpOrRA==
+
+impit-linux-arm64-musl@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-linux-arm64-musl/-/impit-linux-arm64-musl-0.5.4.tgz#279a0bc224eaa0c8cf7a823bf530c9a9d434b163"
+  integrity sha512-L53dT7Vkr0hmaniXbDgIp39z389V0B4cz99qElkuAT62rUG9F+YMHw0JYGbsXrAYLRs/33EFGrHTgSCNF/rO8Q==
+
+impit-linux-x64-gnu@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-linux-x64-gnu/-/impit-linux-x64-gnu-0.5.4.tgz#14016d7e5e1e8c8d681f9a3a6302994a87d4938f"
+  integrity sha512-WMGXSl0bjXoSYnbw6irrm7Vv6ZuUU1r1enw+RIY7sYW7xcMACniEfU7fEBGiWICfVU5a64xjnaql64ZAt6OhqA==
+
+impit-linux-x64-musl@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-linux-x64-musl/-/impit-linux-x64-musl-0.5.4.tgz#6e517457f9e63b8834a9a345b539826f3a13dc30"
+  integrity sha512-W0U9FShPtRHK1YxPsP4+Wor6fwKZzgIsMasaUeNLsMJSogsqKxiMFxCSFIborBLubJnLnAt8CLhTq6cCf8tdNg==
+
+impit-win32-arm64-msvc@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-win32-arm64-msvc/-/impit-win32-arm64-msvc-0.5.4.tgz#1c65ffc095c8843e71a4df59f63574ad8e28289d"
+  integrity sha512-B/RgWokz7zgcy8qD7kmF/sHhvSdwxAq74E4zJDvB92+94N7nGg5xmtINDLjswndN0bInx8FT5OhXheHTvgc6zg==
+
+impit-win32-x64-msvc@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit-win32-x64-msvc/-/impit-win32-x64-msvc-0.5.4.tgz#a36756a53fa7fc04144fa63e2f2daffeed2885b1"
+  integrity sha512-PIGJu3ie8wWF9TGM1UCzAxcHr3oJY734kV3JgV2FJs1ThTyWxgxeunL2YZG1a0CQRHt0vGcnJmdzyhmafLuNxw==
+
+impit@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/impit/-/impit-0.5.4.tgz#b7f1fccd9debff1188d69dbd0442e019398f18d4"
+  integrity sha512-DURlyAmKqsphbt5fUhmcOxK8+gUbt6BbJ8GJo5XdykRAT+rF9bxr6v2iGr3fSkcSld99P0nPlMeiaeJnDpJVKw==
+  optionalDependencies:
+    impit-darwin-arm64 "0.5.4"
+    impit-darwin-x64 "0.5.4"
+    impit-linux-arm64-gnu "0.5.4"
+    impit-linux-arm64-musl "0.5.4"
+    impit-linux-x64-gnu "0.5.4"
+    impit-linux-x64-musl "0.5.4"
+    impit-win32-arm64-msvc "0.5.4"
+    impit-win32-x64-msvc "0.5.4"
+
 is-binary-path@~2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/is-binary-path/-/is-binary-path-2.1.0.tgz"

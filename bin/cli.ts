@@ -3,8 +3,8 @@
 import os from 'os'
 import fs from 'fs'
 import axios from 'axios'
-import { rootDirectory } from '../src/utils'
 import extract from 'extract-zip'
+import { rootDirectory } from '../src/helper/utils'
 
 const foxVersion = '135.0.1'
 const betaVer = '24'

@@ -1,6 +1,6 @@
 import { firefox, BrowserContext } from 'playwright-core'
 import { v4 as uuidv4 } from 'uuid'
-import { BrCookie, TaskConfig, TaskHandle } from './types/browserWorker'
+import { BrCookie, TaskConfig, Task } from './types/browserWorker'
 import { formatCookie, getExecBrowserPath, getScreenSize } from './helper/utils'
 
 
@@ -29,13 +29,13 @@ export class BrowserWorker {
 		await context.addCookies(formatCookie(cookies))
 	}
 
-	private async intInstance(config?: TaskConfig) {
+	private async intInstance(taskConfig?: TaskConfig) {
 		let browser, context
 
 		const configBrowser = {
-			headless: config?.headless ?? false,
-			executablePath: config?.executablePath ?? this.executablePath,
-			proxy: config?.proxy,
+			headless: taskConfig?.headless ?? false,
+			executablePath: taskConfig?.executablePath ?? this.executablePath,
+			proxy: taskConfig?.proxy,
 		}
 
 		const configContext = {
@@ -45,13 +45,13 @@ export class BrowserWorker {
 				'Cross-Origin-Opener-Policy': 'unsafe-none',
 				'Cross-Origin-Embedder-Policy': 'unsafe-none',
 			},
-			...(config?.contextOptions ?? {}),
+			...(taskConfig?.contextOptions ?? {}),
 		}
 
 		try {
-			if (config?.mode === 'Persistent') {
+			if (taskConfig?.mode === 'Persistent') {
 				context = await firefox.launchPersistentContext(
-					config?.userDataDir ?? '',
+					taskConfig?.userDataDir ?? '',
 					{
 						...configBrowser,
 						...configContext,
@@ -63,7 +63,8 @@ export class BrowserWorker {
 				context = await browser.newContext(configContext)
 			}
 
-			await this.addCookies(context, config?.cookies)
+			await this.addCookies(context, taskConfig?.cookies)
+			
 			return { browser, context }
 		} catch (error) {
 			console.error('Error initializing browser instance:', error)
@@ -72,7 +73,7 @@ export class BrowserWorker {
 	}
 
 	async runTask(
-		handle: TaskHandle,
+		task: Task,
 		config?: TaskConfig
 	): Promise<void | unknown> {
 		if (this.checkLimitBrowser()) {
@@ -94,7 +95,7 @@ export class BrowserWorker {
 
 			const page = await context.newPage()
 			try {
-				const result = await handle(page)
+				const result = await task(page)
 				return result
 			} catch (error) {
 				console.error('Error in handle:', error)
@@ -117,18 +118,7 @@ export class BrowserWorker {
 		}
 	}
 
-	async runMultipleTasks(
-		handles: TaskHandle[],
-		configs?: TaskConfig[]
-	): Promise<(void | unknown)[]> {
-		const results = []
-		for (let i = 0; i < handles.length; i++) {
-			const config = configs?.[i] || undefined
-			const result = await this.runTask(handles[i], config)
-			results.push(result)
-		}
-		return results
-	}
+
 
 	setLimitBrowserStart(limitCount: number) {
 		this.limitBrCount = limitCount
@@ -138,14 +128,5 @@ export class BrowserWorker {
 		return Object.keys(this.listTask).length
 	}
 }
-
-export { Page, Browser, BrowserContextOptions } from 'playwright-core'
-
-export {
-	BlockResource,
-	TaskConfig,
-	TaskHandle,
-	BrCookie,
-} from './types/browserWorker'
 
 

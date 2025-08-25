@@ -3,14 +3,10 @@
 [![npm version](https://badge.fury.io/js/t2-browser-worker.svg)](https://badge.fury.io/js/t2-browser-worker)
 
 ## Description
+
 "This is a library for running browser tasks and managing them easily, with Playwright as the core."
+
 ## Installation
-
-```bash
-npm install t2-browser-worker
-```
-
-or using Yarn:
 
 ```bash
 yarn add t2-browser-worker
@@ -25,19 +21,21 @@ yarn t2-browser-worker install
 ### Usage
 
 ```js
-import { BrowserWorker, BrPage } from "t2-browser-worker";
-const br = new BrowserWorker();
+import { BrowserWorker, Page } from 't2-browser-worker'
 
-br.runTask(
-  async (page: BrPage) => {
-    await page.goto("https://example.com");
-  },
-  { headless: false }
-);
+const worker = new BrowserWorker()
+
+const task = async (page: Page) => {
+	await page.goto('https://example.com')
+}
+
+const result = await worker.runTask(
+	task,
+	{ headless: false }
+)
+
 ```
-
 
 ### Api Reference
 
 - [Playwright API Documentation](https://playwright.dev/docs/api/class-playwright)
-

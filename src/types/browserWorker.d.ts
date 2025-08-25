@@ -21,10 +21,11 @@ export interface TaskConfig {
   mode?:"Default"|"Persistent"
   userDataDir?:string
 }
-export type TaskHandle = (page: Page) => Promise<void|unknown>;
+export type Task = (page: Page) => Promise<void|unknown>;
 
 export interface BrCookie extends Omit<Cookie, "expires" | "sameSite"> {
   [key: string]: any;
   sameSite: any;
   expires?: number;
 }
+
