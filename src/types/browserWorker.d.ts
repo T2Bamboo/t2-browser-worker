@@ -1,4 +1,4 @@
-import { Page, Cookie, BrowserContextOptions, LaunchOptions } from "playwright";
+import { Page, Cookie, BrowserContextOptions, LaunchOptions } from "playwright-core";
 export type BlockResource =
   | "image"
   | "stylesheet"
@@ -9,7 +9,9 @@ export type BlockResource =
   | "fetch"
   | "websocket";
 
+  
 export type ProxySettings = NonNullable<LaunchOptions["proxy"]>;
+
 export interface TaskConfig {
   headless?: boolean;
   cookies?: BrCookie[];

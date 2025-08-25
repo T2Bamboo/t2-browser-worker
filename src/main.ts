@@ -19,9 +19,7 @@ export class BrowserWorker {
 			this.limitBrCount = options.limitBrowsers
 		}
 	}
-
-
-
+    
 	private checkLimitBrowser() {
 		return Object.keys(this.listTask).length >= this.limitBrCount
 	}

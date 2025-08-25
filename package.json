@@ -1,33 +1,36 @@
 {
   "name": "t2-browser-worker",
   "version": "0.0.14",
-  "main": "lib/src/index.js",
-  "types": "lib/src/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc && chmod +x lib/bin/cli.js",
+    "build": "tsc && chmod +x dist/bin/cli.js",
     "dev": "ts-node tests/index.ts",
     "dev:br-ins": "ts-node tests/install.test.ts",
     "prepare": "yarn build",
-    "local-install":"ts-node tests/install.test.ts"
+    "local-install": "ts-node tests/install.test.ts"
   },
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.12.0",
     "nodemon": "^3.0.3",
+    "playwright-core": "^1.55.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "bin": {
-    "t2-browser-worker": "./lib/bin/cli.js"
+    "t2-browser-worker": "./dist/bin/cli.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
     "extract-zip": "^2.0.1",
-    "playwright": "1.50.1",
     "uuid": "^11.0.5"
+  },
+  "peerDependencies": {
+    "playwright-core": "*"
   },
   "keywords": [
     "anti-detect-browser",

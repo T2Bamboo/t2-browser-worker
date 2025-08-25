@@ -1,9 +1,26 @@
+import { Cookie } from 'playwright-core'
+import { BrCookie } from '../types/browserWorker'
 import fs from 'fs'
 import path from 'path'
-import os from 'os'
 import { execSync } from 'child_process'
-import { BlockResource, BrCookie } from '../models/types'
-import { Cookie, Page } from 'playwright'
+import os from 'os'
+import { ROOT_PATH } from './constants'
+
+export function formatCookie(cookieList: BrCookie[]): Cookie[] {
+	const pwCookie: Cookie[] = []
+	cookieList.forEach(cookie => {
+		for (const key in cookie) {
+			if (key === 'sameSite') {
+				if (['strict', 'lax', 'none'].includes(cookie[key].toLowerCase())) {
+					cookie[key] =
+						cookie[key].charAt(0).toUpperCase() + cookie[key].slice(1)
+				} else cookie[key] = 'None'
+			}
+			if (key === 'expirationDate') cookie['expires'] = cookie[key]
+		}
+	})
+	return pwCookie
+}
 
 export function rootDirectory() {
 	let currentDir = process.cwd()
@@ -63,61 +80,15 @@ export function getScreenSize() {
 	return [1280, 720]
 }
 
-export function formatCookie(cookieList: BrCookie[]): Cookie[] {
-	const pwCookie: Cookie[] = []
-	cookieList.forEach(cookie => {
-		for (const key in cookie) {
-			if (key === 'sameSite') {
-				if (['strict', 'lax', 'none'].includes(cookie[key].toLowerCase())) {
-					cookie[key] =
-						cookie[key].charAt(0).toUpperCase() + cookie[key].slice(1)
-				} else cookie[key] = 'None'
-			}
-			if (key === 'expirationDate') cookie['expires'] = cookie[key]
-		}
-	})
-	return pwCookie
-}
-
-export async function useBlockResource(page: Page, blockList: BlockResource[]) {
-	await page.route('**/*', route => {
-		if (blockList.includes(route.request().resourceType() as BlockResource)) {
-			route.abort()
-		} else {
-			route.continue()
-		}
-	})
-}
-
-export async function useScroll(page: Page, limit?: number) {
-	let previousHeight = await page.evaluate(() => document.body.scrollHeight)
-	let curCount = 0
-	while (true) {
-		await page.mouse.wheel(0, 1000)
-		await page.waitForTimeout(400)
-		let newHeight = await page.evaluate(() => document.body.scrollHeight)
-		if (newHeight === previousHeight) break
-		if (limit && curCount === limit) break
-		previousHeight = newHeight
-		curCount++
+export function getExecBrowserPath(): string {
+	switch (os.platform()) {
+		case 'linux':
+			return `${ROOT_PATH}/browser/camoufox/camoufox`
+		case 'darwin':
+			return `${ROOT_PATH}/browser/camoufox/Camoufox.app/Contents/MacOS/camoufox`
+		case 'win32':
+			return `${ROOT_PATH}\\browser\\camoufox\\Camoufox.exe`
+		default:
+			return ''
 	}
-}
-
-export async function useSleep(s: number) {
-	return new Promise(resolve => setTimeout(resolve, s * 1000))
-}
-
-export async function usePageFetch(
-	page: Page,
-	url: string,
-	option?: Record<string, any>
-) {
-	const response = await page.context().request.fetch(url, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		...(option ?? {}),
-	})
-	return response.json()
 }
