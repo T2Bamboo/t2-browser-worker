@@ -1,4 +1,3 @@
-import { installBrowser } from "../src/install";
-
+import { installBrowser } from '../src/install'
 
 installBrowser()
