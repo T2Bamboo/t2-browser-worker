@@ -5,3 +5,4 @@ lib
 browser
 tests/cookie.json
 profile
+dist

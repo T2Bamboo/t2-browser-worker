@@ -10,11 +10,12 @@
     "build": "tsc && chmod +x dist/src/cli.js",
     "dev": "ts-node tests/index.ts",
     "dev:br-ins": "ts-node tests/install.test.ts",
-    "prepare": "yarn build",
+    "prepublishOnly": "bun run build",
     "local-install": "ts-node tests/install.test.ts"
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
     "@types/node": "^22.12.0",
     "nodemon": "^3.0.3",
     "playwright-core": "^1.55.0",
@@ -25,7 +26,7 @@
     "t2-browser-worker": "./dist/src/cli.js"
   },
   "dependencies": {
-    "axios": "^1.7.9",
+    "adm-zip": "^0.5.16",
     "extract-zip": "^2.0.1",
     "impit": "^0.5.4"
   },

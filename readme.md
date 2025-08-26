@@ -2,19 +2,18 @@
 
 [![npm version](https://badge.fury.io/js/t2-browser-worker.svg)](https://badge.fury.io/js/t2-browser-worker)
 
-
 This is a library for running browser tasks and managing them easily, with Playwright as the core.
 
 ## Installation
 
 ```bash
-yarn add t2-browser-worker
+bun add t2-browser-worker
 ```
 
 install browser
 
 ```bash
-yarn t2-browser-worker install
+bun t2-browser-worker install
 ```
 
 ### Usage
@@ -28,11 +27,7 @@ const task = async (page: Page) => {
 	await page.goto('https://example.com')
 }
 
-const result = await worker.runTask(
-	task,
-	{ headless: false }
-)
-
+const result = await worker.runTask(task, { headless: false })
 ```
 
 ### Api Reference
@@ -40,4 +35,3 @@ const result = await worker.runTask(
 - [Playwright API Documentation](https://playwright.dev/docs/api/class-playwright)
 
 - See https://camoufox.com/ or https://github.com/daijro/camoufox for more information on Camoufox.
-
