@@ -16,7 +16,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/adm-zip": "^0.5.7",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/js-yaml": "^4.0.9",
+    "@types/language-tags": "^1.0.4",
     "@types/node": "^22.12.0",
+    "@types/progress": "^2.0.7",
+    "@types/xml2js": "^0.4.14",
     "nodemon": "^3.0.3",
     "playwright-core": "^1.55.0",
     "ts-node": "^10.9.2",
@@ -27,8 +32,16 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
+    "better-sqlite3": "^12.2.0",
     "extract-zip": "^2.0.1",
-    "impit": "^0.5.4"
+    "fingerprint-generator": "^2.1.70",
+    "impit": "^0.5.4",
+    "js-yaml": "^4.1.0",
+    "language-tags": "^2.1.0",
+    "maxmind": "^5.0.0",
+    "progress": "^2.0.3",
+    "ua-parser-js": "^2.0.4",
+    "xml2js": "^0.6.2"
   },
   "peerDependencies": {
     "playwright-core": "*"
